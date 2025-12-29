@@ -2,6 +2,7 @@ import sqlite3
 
 conexao = sqlite3.connect("meu_banco.db")
 cursor = conexao.cursor()
+cursor.row_factory = sqlite3.Row
 
 
 def criar_tabela(cursor):
@@ -35,6 +36,7 @@ def inserir_muitos(conexao, cursor, dados):
 
 
 def recuperar_cliente(cursor, id):
+
     cursor.execute("SELECT * FROM clientes WHERE id=?;", (id,))
     return cursor.fetchone()
 
@@ -43,12 +45,17 @@ def listar_clientes(cursor):
     return cursor.execute("SELECT * FROM clientes ORDER BY nome DESC;")
 
 
-cliente = recuperar_cliente(cursor, 2)
-print(cliente)
-
 clientes = listar_clientes(cursor)
 for cliente in clientes:
-    print(cliente)
+    print(dict(cliente))
+
+cliente = recuperar_cliente(cursor, 2)
+print(dict(cliente))
+print(cliente["id"], cliente["nome"], cliente["email"])
+
+print(f"Seja bem-vindo ao sistema {cliente['nome']}")
+print(f"Seja bem-vindo ao sistema {cliente[1]}")
+
 
 # dados = [
 #     ("Guilherme", "guilherme@gmail.com"),
